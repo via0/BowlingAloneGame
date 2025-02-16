@@ -14,6 +14,15 @@ int main(int argc, char* argv[]) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return 1;
     }
+
+#ifdef DEBUG
+    if (!init_debug()) {
+      // init debug failed, handle error
+      cleanup_renderer(&renderer);
+      SDL_Quit();
+      return 1;
+    }
+#endif
     
     if (!init_renderer(&renderer)) {
         SDL_Quit();
@@ -56,6 +65,9 @@ int main(int argc, char* argv[]) {
     
     // Cleanup
     cleanup_renderer(&renderer);
+#ifdef DEBUG
+    cleanup_debug();
+#endif
     SDL_Quit();
     
     return 0;

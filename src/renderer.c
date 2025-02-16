@@ -49,6 +49,10 @@ void render_game(Renderer* renderer, GameState* state) {
             }
         }
     }
+
+#ifdef DEBUG
+    render_debug_info(renderer->renderer, state);
+#endif
     
     // Update screen
     SDL_RenderPresent(renderer->renderer);

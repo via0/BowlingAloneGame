@@ -34,10 +34,17 @@ void render_debug_info(SDL_Renderer* renderer, GameState* state) {
 
     char debug_text[256];
     snprintf(debug_text, sizeof(debug_text), 
-        "Ball Velocity X: %.2f\nBall Velocity Y: %.2f\nAngle: %.2f",
+        "Ball Velocity X: %.2f\nBall Velocity Y: %.2f\nAngle: %.2f\
+         \nSpace: %d\nAngleLeft: %d\nAngleRight: %d\
+         \nWalkLeft: %d\nWalkRight: %d",
         state->ball_velocity_x,
         state->ball_velocity_y,
-        0.0f  // Replace with actual angle when you add it
+        0.0f,  // fixme: add angle, space, keyleft, keyright values
+        state->key_space_pressed,
+        state->key_angle_left_pressed,
+        state->key_angle_right_pressed,
+        state->key_walk_left_pressed,
+        state->key_walk_right_pressed
     );
 
     SDL_Color color = {255, 255, 255, 255};

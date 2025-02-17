@@ -47,6 +47,39 @@ void handle_input(GameState* state, SDL_Event* event) {
 
       case SDLK_SPACE:
         state->key_space_pressed = 1;
+        break;
+      case SDLK_LEFT:
+        state->key_angle_left_pressed = 1;
+        break;
+      case SDLK_RIGHT:
+        state->key_angle_right_pressed = 1;
+        break;
+      case SDLK_a:
+        state->key_walk_left_pressed = 1;
+        break;
+      case SDLK_d:
+        state->key_walk_right_pressed = 1;
+        break;
+    }
+  }
+
+  if (event->type == SDL_KEYUP) {
+    switch (event->key.keysym.sym) {
+      case SDLK_SPACE:
+        state->key_space_pressed = 0;
+        break;
+      case SDLK_LEFT:
+        state->key_angle_left_pressed = 0;
+        break;
+      case SDLK_RIGHT:
+        state->key_angle_right_pressed = 0;
+        break;
+      case SDLK_a:
+        state->key_walk_left_pressed = 0;
+        break;
+      case SDLK_d:
+        state->key_walk_right_pressed = 0;
+        break;
     }
   }
 }

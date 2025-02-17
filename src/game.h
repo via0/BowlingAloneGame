@@ -17,6 +17,10 @@ typedef struct {
   float ball_velocity_y;
 
   Uint8 key_space_pressed;
+  Uint8 key_angle_left_pressed;
+  Uint8 key_angle_right_pressed;
+  Uint8 key_walk_left_pressed;
+  Uint8 key_walk_right_pressed;
 } GameState;
 
 void init_game(GameState* state);

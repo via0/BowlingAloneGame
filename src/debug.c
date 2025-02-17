@@ -39,7 +39,7 @@ void render_debug_info(SDL_Renderer* renderer, GameState* state) {
          \nWalkLeft: %d\nWalkRight: %d",
         state->ball_velocity_x,
         state->ball_velocity_y,
-        0.0f,  // fixme: add angle, space, keyleft, keyright values
+        state->ball_angle_rad,
         state->key_space_pressed,
         state->key_angle_left_pressed,
         state->key_angle_right_pressed,

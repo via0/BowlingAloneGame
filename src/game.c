@@ -2,6 +2,7 @@
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_keycode.h>
 #include <stdlib.h>
+#include <math.h>
 
 void init_game(GameState* state) {
   // Initialize ball in bottom center
@@ -9,6 +10,7 @@ void init_game(GameState* state) {
   state->ball_y = (float) (0.9 * SCREEN_HEIGHT);  // near bottom
   state->ball_velocity_x = 0.0f;
   state->ball_velocity_y = 0.0f;
+  state->ball_angle_rad  = 0.0f;
 }
 
 void update_game(GameState* state, float delta_time) {
@@ -17,10 +19,17 @@ void update_game(GameState* state, float delta_time) {
 }
 
 void ball_update(GameState* state){
-  if(!ball_isMoving(state) && state->key_space_pressed) {
-    // fixme: ball velocity x, y should be scaled based on current angle
-    state->ball_velocity_y = -10; // shoot up towards top of screen baby
-  } else { // ball is moving
+  if(!ball_isMoving(state)){
+    if(state->key_space_pressed){ // launch ball based on current angle
+      state->ball_velocity_y = -10.0f * cos(state->ball_angle_rad);
+      state->ball_velocity_x = -10.0f * sin(state->ball_angle_rad);
+    } else {
+      if(state->key_walk_left_pressed)   state->ball_x -= 5;
+      if(state->key_walk_right_pressed)  state->ball_x += 5;
+      if(state->key_angle_left_pressed)  state->ball_angle_rad += (M_PI * 0.05f);
+      if(state->key_angle_right_pressed) state->ball_angle_rad -= (M_PI * 0.05f);
+    }
+  } else {
     state->ball_x += state->ball_velocity_x;
     state->ball_y += state->ball_velocity_y;
   }

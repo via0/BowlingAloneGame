@@ -23,7 +23,7 @@ add_executable(bowling
 
 # Link SDL2
 #target_link_libraries(bowling ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})
-target_link_libraries(bowling ${SDL2_LIBRARIES} SDL2_ttf)
+target_link_libraries(bowling ${SDL2_LIBRARIES} SDL2_ttf m)
 
 # preprocessor fun
 add_definitions(-DDEBUG) # comment this out to disable debug info

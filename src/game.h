@@ -16,6 +16,8 @@ typedef struct {
   float ball_velocity_x;
   float ball_velocity_y;
 
+  float ball_angle_rad;
+
   Uint8 key_space_pressed;
   Uint8 key_angle_left_pressed;
   Uint8 key_angle_right_pressed;

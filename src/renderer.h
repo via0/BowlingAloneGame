@@ -12,6 +12,8 @@ typedef struct {
 } Renderer;
 
 int init_renderer(Renderer* renderer);
+void render_wall(Renderer* renderer, Wall* wall);
+void render_ball(Renderer* renderer, GameState* state);
 void render_game(Renderer* renderer, GameState* state);
 void cleanup_renderer(Renderer* renderer);
 

@@ -11,18 +11,44 @@ void init_game(GameState* state) {
   state->ball_velocity_x = 0.0f;
   state->ball_velocity_y = 0.0f;
   state->ball_angle_rad  = 0.0f;
+  state->ball_radius     = 10;
+
+  // Initialize wall on left and right side of alley
+  state->walls[0].ori_x   = 0.2 * SCREEN_WIDTH;
+  state->walls[0].ori_y   = 0;
+  state->walls[0].width   = 10;
+  state->walls[0].height  = SCREEN_HEIGHT;
+  state->walls[0].defined = 1;
+
+  state->walls[1].ori_x   = (0.8 * SCREEN_WIDTH) - 10;
+  state->walls[1].ori_y   = 0;
+  state->walls[1].width   = 10;
+  state->walls[1].height  = SCREEN_HEIGHT;
+  state->walls[1].defined = 1;
+
+
 }
 
 void update_game(GameState* state, float delta_time) {
   // This is where you'll put your physics code!
-  ball_update(state); // update ball position and state
+  ball_update(state); // update ball position based on current velocity and user input
+  for (Uint8 i = 0; i < MAX_WALLS; i++){
+    if(state->walls[i].defined && ball_isCollidingWithWall(state, &state->walls[i])) {
+      // TODO: angle of incidence, angle of reflection calculation
+      state->ball_velocity_x = 0;
+      state->ball_velocity_y = 0;
+    }
+  }
 }
 
+// TODO: this function is doing too much, updating ball based on velocity
+// should be diffeent from updating ball based on walking and both should
+// be different from updating ball velocity itself
 void ball_update(GameState* state){
   if(!ball_isMoving(state)){
     if(state->key_space_pressed){ // launch ball based on current angle
-      state->ball_velocity_y = -10.0f * cos(state->ball_angle_rad);
-      state->ball_velocity_x = -10.0f * sin(state->ball_angle_rad);
+      state->ball_velocity_y = -5.0f * cos(state->ball_angle_rad);
+      state->ball_velocity_x = -5.0f * sin(state->ball_angle_rad);
     } else {
       if(state->key_walk_left_pressed)   state->ball_x -= 5;
       if(state->key_walk_right_pressed)  state->ball_x += 5;
@@ -91,4 +117,32 @@ void handle_input(GameState* state, SDL_Event* event) {
         break;
     }
   }
+}
+
+
+// largely borrowed from jeffreythompson.org/collision-detection/circle-rect.php
+bool ball_isCollidingWithWall(GameState* state, Wall *wall) {
+  // determine the point on the rectangle (wall) closest to the center of the ball
+  float testX;
+  float testY;
+
+  if (state->ball_x < wall->ori_x)
+    testX = wall->ori_x;                // center of ball is to the left of the rectangle
+  else if (state->ball_x > wall->ori_x + wall->width)
+    testX = wall->ori_x + wall->width;  // center of ball is to the right of the rectangle
+  else
+    testX = state->ball_x;              // center of ball lies between the left and right coordinates of the rectangle
+
+  if (state->ball_y < wall->ori_y)
+    testY = wall->ori_y;                // center of ball is above the rectangle
+  else if (state->ball_y > wall->ori_y + wall->height)
+    testY = wall->ori_y + wall->height; // center of ball is below the rectangle
+  else
+    testY = state->ball_y;              // center of ball lies between the top and bottom coordinates of the rectangle
+
+  float distX = state->ball_x - testX;
+  float distY = state->ball_y - testY;
+
+  printf("distX: %f\ndistY: %f\nradius: %f", distX, distY, (float)state->ball_radius);
+  return ((distX * distX) + (distY * distY)) <= (state->ball_radius * state->ball_radius);
 }

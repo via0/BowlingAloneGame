@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include <SDL2/SDL_render.h>
 
 int init_renderer(Renderer* renderer) {
     renderer->screen_width = SCREEN_WIDTH;
@@ -37,7 +38,7 @@ void render_game(Renderer* renderer, GameState* state) {
     
     // Draw ball
     SDL_SetRenderDrawColor(renderer->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    const int ball_radius = 10;
+    Uint8 ball_radius = state->ball_radius;
     for (int w = 0; w < ball_radius * 2; w++) {
         for (int h = 0; h < ball_radius * 2; h++) {
             int dx = ball_radius - w;
@@ -50,12 +51,23 @@ void render_game(Renderer* renderer, GameState* state) {
         }
     }
 
+    // Draw walls
+    for (int i = 0; i < MAX_WALLS; i++) {
+      if(state->walls[i].defined == 1) render_wall(renderer, &state->walls[i]);
+    }
+
 #ifdef DEBUG
     render_debug_info(renderer->renderer, state);
 #endif
     
     // Update screen
     SDL_RenderPresent(renderer->renderer);
+}
+
+void render_wall(Renderer* renderer, Wall* wall) {
+  SDL_SetRenderDrawColor(renderer->renderer, 0x32, 0xa8, 0x52, 0xff);
+  SDL_Rect wall_rect = {wall->ori_x, wall->ori_y, wall->width, wall->height};
+  SDL_RenderFillRect(renderer->renderer, &wall_rect);
 }
 
 void cleanup_renderer(Renderer* renderer) {

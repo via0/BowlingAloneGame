@@ -17,6 +17,7 @@ typedef struct {
   int ori_y;
   int width;
   int height;
+  float angle_rad;
 
   bool defined;
 } Wall;
@@ -46,6 +47,7 @@ void update_game(GameState* state, float delta_time);
 void handle_input(GameState* state, SDL_Event* event);
 
 void ball_update(GameState* state);
+void ball_updateVelocity(Ball* ball);
 bool ball_isMoving(GameState* state);
 bool ball_isCollidingWithWall(GameState* state, Wall* wall);
 

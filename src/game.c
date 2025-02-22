@@ -5,6 +5,13 @@
 #include <math.h>
 
 void init_game(GameState* state) {
+  // Initialize user inputs
+  state->key_angle_left_pressed  = 0;
+  state->key_angle_right_pressed = 0;
+  state->key_walk_left_pressed   = 0;
+  state->key_walk_right_pressed  = 0;
+  state->key_space_pressed       = 0;
+
   // Initialize ball in bottom center
   state->ball.x = (float) (0.5 * SCREEN_WIDTH);  // middle of screen
   state->ball.y = (float) (0.9 * SCREEN_HEIGHT);  // near bottom
@@ -14,17 +21,19 @@ void init_game(GameState* state) {
   state->ball.radius     = 10;
 
   // Initialize wall on left and right side of alley
-  state->walls[0].ori_x   = 0.2 * SCREEN_WIDTH;
-  state->walls[0].ori_y   = 0;
-  state->walls[0].width   = 10;
-  state->walls[0].height  = SCREEN_HEIGHT;
-  state->walls[0].defined = 1;
+  state->walls[0].ori_x     = 0.2 * SCREEN_WIDTH;
+  state->walls[0].ori_y     = 0;
+  state->walls[0].width     = 10;
+  state->walls[0].height    = SCREEN_HEIGHT;
+  state->walls[0].angle_rad = 0.0f;
+  state->walls[0].defined   = 1;
 
-  state->walls[1].ori_x   = (0.8 * SCREEN_WIDTH) - 10;
-  state->walls[1].ori_y   = 0;
-  state->walls[1].width   = 10;
-  state->walls[1].height  = SCREEN_HEIGHT;
-  state->walls[1].defined = 1;
+  state->walls[1].ori_x     = (0.8 * SCREEN_WIDTH) - 10;
+  state->walls[1].ori_y     = 0;
+  state->walls[1].width     = 10;
+  state->walls[1].height    = SCREEN_HEIGHT;
+  state->walls[1].angle_rad = 0.0f;
+  state->walls[1].defined   = 1;
 
 
 }
@@ -35,8 +44,9 @@ void update_game(GameState* state, float delta_time) {
   for (Uint8 i = 0; i < MAX_WALLS; i++){
     if(state->walls[i].defined && ball_isCollidingWithWall(state, &state->walls[i])) {
       // TODO: angle of incidence, angle of reflection calculation
-      state->ball.velocity_x = 0;
-      state->ball.velocity_y = 0;
+      printf("Ball is colliding w wall %d", i);
+      state->ball.angle_rad = (2.0f * state->walls[i].angle_rad) - state->ball.angle_rad;
+      ball_updateVelocity(&state->ball);
     }
   }
 }
@@ -47,8 +57,7 @@ void update_game(GameState* state, float delta_time) {
 void ball_update(GameState* state){
   if(!ball_isMoving(state)){
     if(state->key_space_pressed){ // launch ball based on current angle
-      state->ball.velocity_y = -5.0f * cos(state->ball.angle_rad);
-      state->ball.velocity_x = -5.0f * sin(state->ball.angle_rad);
+      ball_updateVelocity(&state->ball);
     } else {
       if(state->key_walk_left_pressed)   state->ball.x -= 5;
       if(state->key_walk_right_pressed)  state->ball.x += 5;
@@ -59,6 +68,11 @@ void ball_update(GameState* state){
     state->ball.x += state->ball.velocity_x;
     state->ball.y += state->ball.velocity_y;
   }
+}
+
+void ball_updateVelocity(Ball* ball){
+  ball->velocity_y = -5.0f * cos(ball->angle_rad);
+  ball->velocity_x = -5.0f * sin(ball->angle_rad);
 }
 
 bool ball_isMoving(GameState* state){
@@ -143,6 +157,6 @@ bool ball_isCollidingWithWall(GameState* state, Wall *wall) {
   float distX = state->ball.x - testX;
   float distY = state->ball.y - testY;
 
-  printf("distX: %f\ndistY: %f\nradius: %f", distX, distY, (float)state->ball.radius);
+  //printf("distX: %f\ndistY: %f\nradius: %f", distX, distY, (float)state->ball.radius);
   return ((distX * distX) + (distY * distY)) <= (state->ball.radius * state->ball.radius);
 }

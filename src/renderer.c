@@ -38,15 +38,15 @@ void render_game(Renderer* renderer, GameState* state) {
     
     // Draw ball
     SDL_SetRenderDrawColor(renderer->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    Uint8 ball_radius = state->ball_radius;
+    Uint8 ball_radius = state->ball.radius;
     for (int w = 0; w < ball_radius * 2; w++) {
         for (int h = 0; h < ball_radius * 2; h++) {
             int dx = ball_radius - w;
             int dy = ball_radius - h;
             if ((dx*dx + dy*dy) <= (ball_radius * ball_radius)) {
                 SDL_RenderDrawPoint(renderer->renderer, 
-                    state->ball_x + w - ball_radius, 
-                    state->ball_y + h - ball_radius);
+                    state->ball.x + w - ball_radius, 
+                    state->ball.y + h - ball_radius);
             }
         }
     }

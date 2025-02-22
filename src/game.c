@@ -6,12 +6,12 @@
 
 void init_game(GameState* state) {
   // Initialize ball in bottom center
-  state->ball_x = (float) (0.5 * SCREEN_WIDTH);  // middle of screen
-  state->ball_y = (float) (0.9 * SCREEN_HEIGHT);  // near bottom
-  state->ball_velocity_x = 0.0f;
-  state->ball_velocity_y = 0.0f;
-  state->ball_angle_rad  = 0.0f;
-  state->ball_radius     = 10;
+  state->ball.x = (float) (0.5 * SCREEN_WIDTH);  // middle of screen
+  state->ball.y = (float) (0.9 * SCREEN_HEIGHT);  // near bottom
+  state->ball.velocity_x = 0.0f;
+  state->ball.velocity_y = 0.0f;
+  state->ball.angle_rad  = 0.0f;
+  state->ball.radius     = 10;
 
   // Initialize wall on left and right side of alley
   state->walls[0].ori_x   = 0.2 * SCREEN_WIDTH;
@@ -35,8 +35,8 @@ void update_game(GameState* state, float delta_time) {
   for (Uint8 i = 0; i < MAX_WALLS; i++){
     if(state->walls[i].defined && ball_isCollidingWithWall(state, &state->walls[i])) {
       // TODO: angle of incidence, angle of reflection calculation
-      state->ball_velocity_x = 0;
-      state->ball_velocity_y = 0;
+      state->ball.velocity_x = 0;
+      state->ball.velocity_y = 0;
     }
   }
 }
@@ -47,23 +47,23 @@ void update_game(GameState* state, float delta_time) {
 void ball_update(GameState* state){
   if(!ball_isMoving(state)){
     if(state->key_space_pressed){ // launch ball based on current angle
-      state->ball_velocity_y = -5.0f * cos(state->ball_angle_rad);
-      state->ball_velocity_x = -5.0f * sin(state->ball_angle_rad);
+      state->ball.velocity_y = -5.0f * cos(state->ball.angle_rad);
+      state->ball.velocity_x = -5.0f * sin(state->ball.angle_rad);
     } else {
-      if(state->key_walk_left_pressed)   state->ball_x -= 5;
-      if(state->key_walk_right_pressed)  state->ball_x += 5;
-      if(state->key_angle_left_pressed)  state->ball_angle_rad += (M_PI * 0.05f);
-      if(state->key_angle_right_pressed) state->ball_angle_rad -= (M_PI * 0.05f);
+      if(state->key_walk_left_pressed)   state->ball.x -= 5;
+      if(state->key_walk_right_pressed)  state->ball.x += 5;
+      if(state->key_angle_left_pressed)  state->ball.angle_rad += (M_PI * 0.05f);
+      if(state->key_angle_right_pressed) state->ball.angle_rad -= (M_PI * 0.05f);
     }
   } else {
-    state->ball_x += state->ball_velocity_x;
-    state->ball_y += state->ball_velocity_y;
+    state->ball.x += state->ball.velocity_x;
+    state->ball.y += state->ball.velocity_y;
   }
 }
 
 bool ball_isMoving(GameState* state){
-  return (((state->ball_velocity_x * state->ball_velocity_x) +
-          (state->ball_velocity_y * state->ball_velocity_y))
+  return (((state->ball.velocity_x * state->ball.velocity_x) +
+          (state->ball.velocity_y * state->ball.velocity_y))
           > (EPSILON * EPSILON));
 }
 
@@ -126,23 +126,23 @@ bool ball_isCollidingWithWall(GameState* state, Wall *wall) {
   float testX;
   float testY;
 
-  if (state->ball_x < wall->ori_x)
+  if (state->ball.x < wall->ori_x)
     testX = wall->ori_x;                // center of ball is to the left of the rectangle
-  else if (state->ball_x > wall->ori_x + wall->width)
+  else if (state->ball.x > wall->ori_x + wall->width)
     testX = wall->ori_x + wall->width;  // center of ball is to the right of the rectangle
   else
-    testX = state->ball_x;              // center of ball lies between the left and right coordinates of the rectangle
+    testX = state->ball.x;              // center of ball lies between the left and right coordinates of the rectangle
 
-  if (state->ball_y < wall->ori_y)
+  if (state->ball.y < wall->ori_y)
     testY = wall->ori_y;                // center of ball is above the rectangle
-  else if (state->ball_y > wall->ori_y + wall->height)
+  else if (state->ball.y > wall->ori_y + wall->height)
     testY = wall->ori_y + wall->height; // center of ball is below the rectangle
   else
-    testY = state->ball_y;              // center of ball lies between the top and bottom coordinates of the rectangle
+    testY = state->ball.y;              // center of ball lies between the top and bottom coordinates of the rectangle
 
-  float distX = state->ball_x - testX;
-  float distY = state->ball_y - testY;
+  float distX = state->ball.x - testX;
+  float distY = state->ball.y - testY;
 
-  printf("distX: %f\ndistY: %f\nradius: %f", distX, distY, (float)state->ball_radius);
-  return ((distX * distX) + (distY * distY)) <= (state->ball_radius * state->ball_radius);
+  printf("distX: %f\ndistY: %f\nradius: %f", distX, distY, (float)state->ball.radius);
+  return ((distX * distX) + (distY * distY)) <= (state->ball.radius * state->ball.radius);
 }

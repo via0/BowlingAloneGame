@@ -22,14 +22,15 @@ typedef struct {
 } Wall;
 
 typedef struct {
-  float ball_x;
-  float ball_y;
-  float ball_velocity_x;
-  float ball_velocity_y;
-  Uint8 ball_radius;
+  float x;
+  float y;
+  float velocity_x;
+  float velocity_y;
+  Uint8 radius;
+  float angle_rad;
+} Ball;
 
-  float ball_angle_rad;
-
+typedef struct {
   Uint8 key_space_pressed;
   Uint8 key_angle_left_pressed;
   Uint8 key_angle_right_pressed;
@@ -37,6 +38,7 @@ typedef struct {
   Uint8 key_walk_right_pressed;
 
   Wall walls[MAX_WALLS];
+  Ball ball;
 } GameState;
 
 void init_game(GameState* state);

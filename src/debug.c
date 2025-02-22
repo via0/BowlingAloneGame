@@ -37,9 +37,9 @@ void render_debug_info(SDL_Renderer* renderer, GameState* state) {
         "Ball Velocity X: %.2f\nBall Velocity Y: %.2f\nAngle: %.2f\
          \nSpace: %d\nAngleLeft: %d\nAngleRight: %d\
          \nWalkLeft: %d\nWalkRight: %d",
-        state->ball_velocity_x,
-        state->ball_velocity_y,
-        state->ball_angle_rad,
+        state->ball.velocity_x,
+        state->ball.velocity_y,
+        state->ball.angle_rad,
         state->key_space_pressed,
         state->key_angle_left_pressed,
         state->key_angle_right_pressed,

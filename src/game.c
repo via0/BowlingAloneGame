@@ -61,6 +61,14 @@ void update_game(GameState* state, float delta_time) {
       ball_updateVelocity(&state->ball);
     }
   }
+
+  for (Uint8 i = 0; i < NUM_PINS; i++){
+    if(state->pins[i].defined && state->pins[i].alive && ball_isCollidingWithPin(&state->ball, &state->pins[i])) {
+      // FIXME: kill the pin, don't despawn it (alive should be 0, but defined should be 1, then render a dead pin on screen)
+      state->pins[i].alive = 0;
+      state->pins[i].defined = 0;
+    }
+  }
 }
 
 // TODO: this function is doing too much, updating ball based on velocity
@@ -176,4 +184,14 @@ bool ball_isCollidingWithWall(GameState* state, Wall *wall) {
 
   //printf("distX: %f\ndistY: %f\nradius: %f", distX, distY, (float)state->ball.radius);
   return ((distX * distX) + (distY * distY)) <= (state->ball.radius * state->ball.radius);
+}
+
+bool ball_isCollidingWithPin(Ball* ball, Pin* pin) {
+  float distX = ball->x - pin->x;
+  float distY = ball->y - pin->y;
+
+  float distSquared = (distX * distX) + (distY * distY);
+  float combinedRadiusSquared = (ball->radius + pin->radius) * (ball->radius + pin->radius);
+
+  return distSquared <= combinedRadiusSquared;
 }

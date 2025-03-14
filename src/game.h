@@ -11,6 +11,11 @@
 #define NUM_PINS   10 // 10 pins in a bowling game, of course!
 #define NUM_FRAMES 10 // 10 frames in a game, of course!!
 
+#define PIN_RADIUS 5
+#define PIN_HEIGHT 10 // THAT'S QUITE BIG
+
+#define BALL_RADIUS 10
+
 #define EPSILON    0.0001f // floating point zero
 #define EPSILON_N -0.0001f // floating point negative 0
 
@@ -55,6 +60,7 @@ typedef struct {
 } GameState;
 
 void init_game(GameState* state);
+void init_pins(GameState* state);
 void update_game(GameState* state, float delta_time);
 void handle_input(GameState* state, SDL_Event* event);
 

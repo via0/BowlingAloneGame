@@ -18,7 +18,7 @@ void init_game(GameState* state) {
   state->ball.velocity_x = 0.0f;
   state->ball.velocity_y = 0.0f;
   state->ball.angle_rad  = 0.0f;
-  state->ball.radius     = 10;
+  state->ball.radius     = BALL_RADIUS;
 
   // Initialize wall on left and right side of alley
   state->walls[0].ori_x     = 0.2 * SCREEN_WIDTH;
@@ -35,7 +35,19 @@ void init_game(GameState* state) {
   state->walls[1].angle_rad = 0.0f;
   state->walls[1].defined   = 1;
 
+  init_pins(state);
+}
 
+// The way this should probably work is reading pin data from a file
+// Same as walls, maybe like a levels.h where level data contains initial values
+// for wall positions, pin positions
+void init_pins(GameState* state){
+  state->pins[0].x       = SCREEN_WIDTH / 2;
+  state->pins[0].y       = SCREEN_HEIGHT / 2;
+  state->pins[0].radius  = PIN_RADIUS;
+  state->pins[0].height  = PIN_HEIGHT;
+  state->pins[0].defined = 1;
+  state->pins[0].alive   = 1;
 }
 
 void update_game(GameState* state, float delta_time) {

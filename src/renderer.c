@@ -56,6 +56,11 @@ void render_game(Renderer* renderer, GameState* state) {
     if(state->walls[i].defined == 1) render_wall(renderer, &state->walls[i]);
   }
 
+  // Draw pins
+  for (int i = 0; i < NUM_PINS; i++) {
+    if(state->pins[0].defined == 1) render_pin(renderer, &state->pins[i]);
+  }
+
 #ifdef DEBUG
   render_debug_info(renderer->renderer, state);
 #endif
@@ -81,13 +86,29 @@ void render_ball(Renderer* renderer, Ball* ball) {
   }
 }
 
-  void render_wall(Renderer* renderer, Wall* wall) {
-    SDL_SetRenderDrawColor(renderer->renderer, 0x32, 0xa8, 0x52, 0xff);
-    SDL_Rect wall_rect = {wall->ori_x, wall->ori_y, wall->width, wall->height};
-    SDL_RenderFillRect(renderer->renderer, &wall_rect);
-  }
+void render_wall(Renderer* renderer, Wall* wall) {
+  SDL_SetRenderDrawColor(renderer->renderer, 0x32, 0xa8, 0x52, 0xff);
+  SDL_Rect wall_rect = {wall->ori_x, wall->ori_y, wall->width, wall->height};
+  SDL_RenderFillRect(renderer->renderer, &wall_rect);
+}
 
-  void cleanup_renderer(Renderer* renderer) {
-    SDL_DestroyRenderer(renderer->renderer);
-    SDL_DestroyWindow(renderer->window);
+void render_pin(Renderer* renderer, Pin* pin) {
+  SDL_SetRenderDrawColor(renderer->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  Uint8 pin_radius = pin->radius;
+  for (int w = 0; w < pin_radius * 2; w++) {
+    for (int h = 0; h < pin_radius * 2; h++) {
+      int dx = pin_radius - w;
+      int dy = pin_radius - h;
+      if ((dx*dx + dy*dy) <= (pin_radius * pin_radius)) {
+        SDL_RenderDrawPoint(renderer->renderer, 
+            pin->x + w - pin_radius, 
+            pin->y + h - pin_radius);
+      }
+    }
   }
+}
+
+void cleanup_renderer(Renderer* renderer) {
+  SDL_DestroyRenderer(renderer->renderer);
+  SDL_DestroyWindow(renderer->window);
+}

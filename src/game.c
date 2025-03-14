@@ -94,6 +94,11 @@ void handle_input(GameState* state, SDL_Event* event) {
         SDL_PushEvent(&quit_event);
         break;
 
+      case SDLK_r:
+        // reset game
+        init_game(state);
+        break;
+
       case SDLK_SPACE:
         state->key_space_pressed = 1;
         break;

@@ -8,6 +8,8 @@
 #define SCREEN_HEIGHT 320
 
 #define MAX_WALLS  10 // maximum number of walls a level can have
+#define NUM_PINS   10 // 10 pins in a bowling game, of course!
+#define NUM_FRAMES 10 // 10 frames in a game, of course!!
 
 #define EPSILON    0.0001f // floating point zero
 #define EPSILON_N -0.0001f // floating point negative 0
@@ -32,6 +34,15 @@ typedef struct {
 } Ball;
 
 typedef struct {
+  int x;
+  int y;
+  Uint8 radius;
+  Uint8 height; // when it's knocked over, this is length of the pin
+  bool alive;   // has this pin been defeated?
+  bool defined; // should this pin be rendered at all?
+} Pin;
+
+typedef struct {
   Uint8 key_space_pressed;
   Uint8 key_angle_left_pressed;
   Uint8 key_angle_right_pressed;
@@ -40,6 +51,7 @@ typedef struct {
 
   Wall walls[MAX_WALLS];
   Ball ball;
+  Pin  pins[NUM_PINS];
 } GameState;
 
 void init_game(GameState* state);

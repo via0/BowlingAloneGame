@@ -58,7 +58,7 @@ void render_game(Renderer* renderer, GameState* state) {
 
   // Draw pins
   for (int i = 0; i < NUM_PINS; i++) {
-    if(state->pins[0].defined == 1) render_pin(renderer, &state->pins[i]);
+    if(state->pins[i].defined == 1) render_pin(renderer, &state->pins[i]);
   }
 
 #ifdef DEBUG

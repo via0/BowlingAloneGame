@@ -11,8 +11,9 @@
 #define NUM_PINS   10 // 10 pins in a bowling game, of course!
 #define NUM_FRAMES 10 // 10 frames in a game, of course!!
 
-#define PIN_RADIUS 5
-#define PIN_HEIGHT 10 // THAT'S QUITE BIG
+#define PIN_RADIUS  5
+#define PIN_HEIGHT  (3 * PIN_RADIUS) // THAT'S QUITE BIG
+#define PIN_SPACING (PIN_RADIUS * 12 / 5) // WE'LL PLAY THIS BY EAR
 
 #define BALL_RADIUS 10
 

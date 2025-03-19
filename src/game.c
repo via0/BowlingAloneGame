@@ -42,12 +42,47 @@ void init_game(GameState* state) {
 // Same as walls, maybe like a levels.h where level data contains initial values
 // for wall positions, pin positions
 void init_pins(GameState* state){
+  for(int i = 0; i < NUM_PINS; i++){
+    state->pins[i].radius  = PIN_RADIUS;
+    state->pins[i].height  = PIN_HEIGHT;
+    state->pins[i].defined = 1;
+    state->pins[i].alive   = 1;
+  }
+
+  // 6 7 8 9
+  //  3 4 5
+  //   1 2
+  //    0
+
   state->pins[0].x       = SCREEN_WIDTH / 2;
   state->pins[0].y       = SCREEN_HEIGHT / 2;
-  state->pins[0].radius  = PIN_RADIUS;
-  state->pins[0].height  = PIN_HEIGHT;
-  state->pins[0].defined = 1;
-  state->pins[0].alive   = 1;
+
+  state->pins[1].x       = state->pins[0].x - (PIN_SPACING / 2);
+  state->pins[1].y       = state->pins[0].y - (PIN_SPACING * sqrt(3) / 2);
+
+  state->pins[2].x       = state->pins[1].x + PIN_SPACING;
+  state->pins[2].y       = state->pins[1].y;
+
+  state->pins[3].x       = state->pins[1].x - (PIN_SPACING / 2);
+  state->pins[3].y       = state->pins[1].y - (PIN_SPACING * sqrt(3) / 2);
+
+  state->pins[4].x       = state->pins[3].x + PIN_SPACING;
+  state->pins[4].y       = state->pins[3].y;
+
+  state->pins[5].x       = state->pins[4].x + PIN_SPACING;
+  state->pins[5].y       = state->pins[4].y;
+
+  state->pins[6].x       = state->pins[3].x - (PIN_SPACING / 2);
+  state->pins[6].y       = state->pins[3].y - (PIN_SPACING * sqrt(3) / 2);
+
+  state->pins[7].x       = state->pins[6].x + PIN_SPACING;
+  state->pins[7].y       = state->pins[6].y;
+
+  state->pins[8].x       = state->pins[7].x + PIN_SPACING;
+  state->pins[8].y       = state->pins[7].y;
+
+  state->pins[9].x       = state->pins[8].x + PIN_SPACING;
+  state->pins[9].y       = state->pins[8].y;
 }
 
 void update_game(GameState* state, float delta_time) {

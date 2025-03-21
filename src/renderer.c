@@ -93,6 +93,13 @@ void render_wall(Renderer* renderer, Wall* wall) {
 }
 
 void render_pin(Renderer* renderer, Pin* pin) {
+  if(pin->alive)
+    render_live_pin(renderer, pin);
+  else
+    render_dead_pin(renderer, pin);
+}
+
+void render_live_pin(Renderer* renderer, Pin* pin) {
   SDL_SetRenderDrawColor(renderer->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
   Uint8 pin_radius = pin->radius;
   for (int w = 0; w < pin_radius * 2; w++) {
@@ -106,6 +113,15 @@ void render_pin(Renderer* renderer, Pin* pin) {
       }
     }
   }
+}
+
+void render_dead_pin(Renderer* renderer, Pin* pin) {
+  SDL_SetRenderDrawColor(renderer->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  SDL_Rect pin_rect = {pin->x - (PIN_RADIUS / 2),
+                       pin->y - (PIN_HEIGHT),
+                       pin->radius,
+                       pin->height};
+  SDL_RenderFillRect(renderer->renderer, &pin_rect);
 }
 
 void cleanup_renderer(Renderer* renderer) {

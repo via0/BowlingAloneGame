@@ -45,6 +45,7 @@ typedef struct {
   int y;
   Uint8 radius;
   Uint8 height; // when it's knocked over, this is length of the pin
+  float angle_rad; // the angle at which the dead pin is rotated
   bool alive;   // has this pin been defeated?
   bool defined; // should this pin be rendered at all?
 } Pin;

@@ -100,6 +100,9 @@ void update_game(GameState* state, float delta_time) {
   for (Uint8 i = 0; i < NUM_PINS; i++){
     if(state->pins[i].defined && state->pins[i].alive && ball_isCollidingWithPin(&state->ball, &state->pins[i])) {
       state->pins[i].alive = 0;
+      state->pins[i].angle_rad = M_PI_4;
+      // FIXME: replace above line with something like
+      // state->pins[i].angle_rad = ball_getPinCollisionAngle(&state->ball, &state->pins[i]);
     }
   }
 }

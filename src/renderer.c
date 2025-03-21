@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
 
 int init_renderer(Renderer* renderer) {
@@ -116,12 +117,46 @@ void render_live_pin(Renderer* renderer, Pin* pin) {
 }
 
 void render_dead_pin(Renderer* renderer, Pin* pin) {
+  // Generate texture for the rectangle
+  SDL_Texture* rectTexture = SDL_CreateTexture(
+      renderer->renderer,
+      SDL_PIXELFORMAT_RGBA8888,
+      SDL_TEXTUREACCESS_TARGET,
+      PIN_RADIUS, PIN_HEIGHT
+  );
+
+  // Set the texture as the rendering target
+  SDL_SetRenderTarget(renderer->renderer, rectTexture);
+
+  // Fill the texture with the desired color
   SDL_SetRenderDrawColor(renderer->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-  SDL_Rect pin_rect = {pin->x - (PIN_RADIUS / 2),
-                       pin->y - (PIN_HEIGHT),
+  SDL_RenderClear(renderer->renderer);
+
+  // Reset rendering target to default (window)
+  SDL_SetRenderTarget(renderer->renderer, NULL);
+
+  // Define actual rectangle object
+  SDL_Rect pin_rect = {pin->x - (pin->radius / 2),
+                       pin->y - (pin->height),
                        pin->radius,
                        pin->height};
-  SDL_RenderFillRect(renderer->renderer, &pin_rect);
+
+  // Define rotation point (bottom of rectangle)
+  SDL_Point rotationPoint = {
+    pin->radius / 2, // X center of sprite
+    pin->height      // Y bottom of sprite
+  };
+
+  // Render the rectangle with rotation
+  SDL_RenderCopyEx(
+      renderer->renderer,
+      rectTexture,
+      NULL,
+      &pin_rect,
+      pin->angle_rad * 180 / M_PI,
+      &rotationPoint,
+      SDL_FLIP_NONE
+  );
 }
 
 void cleanup_renderer(Renderer* renderer) {

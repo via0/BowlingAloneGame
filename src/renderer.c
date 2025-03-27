@@ -153,7 +153,7 @@ void render_dead_pin(Renderer* renderer, Pin* pin) {
       rectTexture,
       NULL,
       &pin_rect,
-      pin->angle_rad * 180 / M_PI,
+      pin->angle_rad * -180.0f / M_PI, // rotation is clockwise bc SDL is insane
       &rotationPoint,
       SDL_FLIP_NONE
   );

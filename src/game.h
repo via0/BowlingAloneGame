@@ -26,7 +26,7 @@ typedef struct {
   int ori_y;
   int width;
   int height;
-  float angle_rad;
+  float angle_rad; // 0 = north
 
   bool defined;
 } Wall;
@@ -37,7 +37,7 @@ typedef struct {
   float velocity_x;
   float velocity_y;
   Uint8 radius;
-  float angle_rad;
+  float angle_rad; // 0 = north
 } Ball;
 
 typedef struct {
@@ -45,7 +45,7 @@ typedef struct {
   int y;
   Uint8 radius;
   Uint8 height; // when it's knocked over, this is length of the pin
-  float angle_rad; // the angle at which the dead pin is rotated
+  float angle_rad; // the angle at which the dead pin is rotated; 0 = north
   bool alive;   // has this pin been defeated?
   bool defined; // should this pin be rendered at all?
 } Pin;

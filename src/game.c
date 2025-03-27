@@ -100,8 +100,6 @@ void update_game(GameState* state, float delta_time) {
   for (Uint8 i = 0; i < NUM_PINS; i++){
     if(state->pins[i].defined && state->pins[i].alive && ball_isCollidingWithPin(&state->ball, &state->pins[i])) {
       state->pins[i].alive = 0;
-     //  state->pins[i].angle_rad = M_PI_4;
-      // FIXME: replace above line with something like
       state->pins[i].angle_rad = ball_getPinCollisionAngle(&state->ball, &state->pins[i]);
     }
   }
@@ -234,14 +232,21 @@ bool ball_isCollidingWithPin(Ball* ball, Pin* pin) {
 
 
 float ball_getPinCollisionAngle(Ball* ball, Pin* pin) {
-  float distX = pin->x - ball->x;
-  float distY = ball->y - pin->y; // keep in mind higher y coordinate = more negative y on normal XY plane, so reverse order of subtraction
+
+  //      ^ 0 degrees
+  // 90 <  > 270
+  //     v 180
+  //
+  //  which means going more positive x in this frame means more north along the screen means smaller y coordinate
+  float distX = -(pin->y - ball->y);
+  //  and also going more positive y in this frame means more left along the screen means smaller x coordinate
+  float distY = -(pin->x - ball->x);
 
   float angle_rad = atan(distY / distX);
 
   // angle_rad is between -90 and +90; so if we're in quadrant II or III, correct this
-  // if pin is to the left of the ball, we're in quadrant II or III and distX is positive
-  if (distX > EPSILON)
+  // we're in quadrant II or III if our distX is negative
+  if (distX < EPSILON_N)
     angle_rad += M_PI;
 
   return angle_rad;

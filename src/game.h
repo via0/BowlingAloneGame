@@ -72,5 +72,6 @@ void ball_updateVelocity(Ball* ball);
 bool ball_isMoving(GameState* state);
 bool ball_isCollidingWithWall(GameState* state, Wall* wall);
 bool ball_isCollidingWithPin(Ball* ball, Pin* pin);
+float ball_getPinCollisionAngle(Ball* ball, Pin* pin);
 
 #endif
